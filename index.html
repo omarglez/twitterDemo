@@ -4,8 +4,13 @@
         <meta charset="utf-8">
         <title>AppDirect Coding Challenge</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="dist/bundle.js" defer></script>
     </head>
     <body>
+        <noscript>
+          You need to enable JavaScript to run this app.
+        </noscript>
+
         <h1>AppDirect Coding Challenge</h1>
         <p>You're all set! Now let's get to the action!</p>
         <h2>Choose your flavor</h2>
@@ -17,5 +22,6 @@
         <h2>Twitter API</h2>
         <p>The proxy server should be already running in the background. If you provided correct credentials for your Twitter API and Twitter Secret Key, you should now be able to use the api as the example below:</p>
         <pre>http://localhost:7890/1.1/statuses/user_timeline.json?count=30&screen_name=appdirect</pre>
+        <div id="root"></div>
     </body>
 </html>

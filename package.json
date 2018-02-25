@@ -1,0 +1,27 @@
+{
+    "name": "omar-gonzalez-code-challenge",
+    "description": "Twitter feed demo",
+    "author": {
+        "name": "Omar Gonzalez",
+        "email": "omargonzalez233@gmail.com"
+    },
+    "dependencies": {
+    "http-server": "^0.9.0",
+    "twitter-proxy": "^2.0.0"
+    },
+    "scripts": {
+        "dev": "npx webpack --config webpack.config.js --mode development",
+        "build": "npx webpack --config webpack.config.js --mode production",
+        "start": "node server.js"
+    },
+    "devDependencies": {
+        "babel-core": "^6.26.0",
+        "babel-loader": "^7.1.3",
+        "babel-preset-env": "^1.6.1",
+        "babel-preset-react": "^6.24.1",
+        "react": "^16.2.0",
+        "react-dom": "^16.2.0",
+        "webpack": "^4.0.0",
+        "webpack-cli": "^2.0.9"
+    }
+}
