@@ -1,0 +1,11 @@
+# Compiled src
+/dist
+
+# Node stuff
+/node_modules
+
+# Sensitive data
+config.json
+
+# Server code
+server.js
