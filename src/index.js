@@ -65,7 +65,7 @@ class FeedManager extends React.Component {
 
     render() {
         return (
-            <div id="manager">
+            <div className="feedManager">
                 {this.state.tweetContainers.map((ts, i) =>
                     <div key={this.props.screenNames[i]} className={`column${i}`} >
                         <TweetFeed tweets={ts} />

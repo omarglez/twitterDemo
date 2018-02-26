@@ -4,7 +4,7 @@ body {
     background-color: #e6e6e6;
 }
 
-#manager {
+.feedManager {
     display: grid;
     grid-template-columns: 1fr repeat(3, 400px) 1fr;
     grid-template-rows: 1fr;
@@ -36,6 +36,8 @@ ul.feed {
     background-color: #fff;
     border-top: 2px solid #e6e6e6;
     cursor: pointer;
+    box-sizing: border-box;
+    height: 105px;
 }
 
 .tweet:hover {

@@ -1,5 +1,5 @@
 /*
-    Returns a promise to an array of tweets
+    Returns a promise to an array of tweets in json format
 */
 function getTweetsPromise(screenName, count = 30) {
     let apiStr = 'http://localhost:7890/1.1/statuses/user_timeline.json';
@@ -12,7 +12,8 @@ function getTweetsPromise(screenName, count = 30) {
     Takes a UTC time string and returns a prettyfied time format:
     Less than an hour ago: XXm
     Less than a day ago: Yh
-    Other: Month Day
+    This year: Month Day
+    Other: Month Day Year
 */
 function formatUTCTime(time) {
     let then = new Date(time);
@@ -23,19 +24,29 @@ function formatUTCTime(time) {
     let diff = new Date(now.getTime() - then.getTime());
     let timeString = "0h"; // default value
 
-    if(diff.getUTCDate() === 1) {
+    // if less than a day has passed (using Unix epoch)
+    if(diff.getUTCDate() === 1 && diff.getUTCFullYear() === 1970) {
+        // less than an hour
         if(diff.getUTCHours() === 0) {
             timeString = `${diff.getUTCMinutes()}m`;
         } else {
             timeString = `${diff.getUTCHours()}h`;
         }
     } else {
-        timeString = `${months[then.getMonth()]} ${then.getDate()}`;
+        // same year
+        if(then.getFullYear() === now.getFullYear()) {
+            timeString = `${months[then.getMonth()]} ${then.getDate()}`;
+        } else {
+            timeString = `${months[then.getMonth()]} ${then.getDate()} ${then.getFullYear()}`;
+        }
     }
 
     return timeString;
 }
 
+/*
+    Get the full unique link to a tweet
+*/
 function getTweetLinkText(screenName, id) {
     let baseURL = "https://twitter.com/";
 
