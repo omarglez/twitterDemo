@@ -4,6 +4,32 @@ body {
     background-color: #e6e6e6;
 }
 
+div.center {
+    margin: 0 auto;
+}
+
+#topBar {
+    background-color: #5182ff;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    flex-flow: row nowrap;
+}
+
+#topBar > span {
+    padding-left: 20px;
+    cursor: pointer;
+}
+
+#topBar h1 {
+    margin: 0;
+}
+
+.topBarElement {
+    color: #FFF;
+    font-size: 2em;
+}
+
 .feedManager {
     display: grid;
     grid-template-columns: 1fr repeat(3, 400px) 1fr;

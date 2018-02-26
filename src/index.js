@@ -76,12 +76,35 @@ class FeedManager extends React.Component {
     }
 }
 
+class TopBar extends React.Component {
+    render() {
+        return (
+            <div id="topBar">
+                <span className="topBarElement">&#9776;</span>
+                <div className="center">
+                    <h1 className="topBarElement">My Tweet Feed</h1>
+                </div>
+            </div>
+        );
+    }
+}
+
+class Main extends React.Component {
+    render() {
+        return (
+            <div>
+                <TopBar />
+                <FeedManager
+                    screenNames={["appdirect", "laughingsquid", "techcrunch"]}
+                    count={30}
+                />
+            </div>
+        );
+    }
+}
 
 
 ReactDOM.render(
-    <FeedManager
-        screenNames={["appdirect", "laughingsquid", "techcrunch"]}
-        count={30}
-    />,
+    <Main />,
     document.getElementById('root')
 );
