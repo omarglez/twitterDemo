@@ -53,7 +53,19 @@ function getTweetLinkText(screenName, id) {
     return `${baseURL}${screenName}/status/${id}`;
 }
 
+/*
+    Fixes element to the top of the screen through css.
+*/
+function fixToTop(element) {
+    if(window.pageYOffset >= element.offsetTop) {
+        element.classList.add("sticky");
+    } else {
+        element.classList.remove("sticky");
+    }
+}
+
 export {
+    fixToTop,
     formatUTCTime,
     getTweetLinkText,
     getTweetsPromise

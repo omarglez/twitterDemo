@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {formatUTCTime, getTweetLinkText, getTweetsPromise} from './util.js';
+import {fixToTop, formatUTCTime, getTweetLinkText, getTweetsPromise} from './util.js';
 import './styles/index.css';
 
 /*
@@ -77,6 +77,16 @@ class FeedManager extends React.Component {
 }
 
 class TopBar extends React.Component {
+    componentDidMount() {
+        window.onscroll = function() {
+            fixToTop(document.getElementById('topBar'));
+        };
+    }
+
+    componentWillUnmount() {
+        window.onscroll = function() {};
+    }
+
     render() {
         return (
             <div id="topBar">
