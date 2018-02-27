@@ -181,7 +181,8 @@ class Main extends React.Component {
             var stringSettings = JSON.stringify(batchedSettings);
             localStorage.setItem("settings", stringSettings);
         }
-        // TODO: actually apply settings live
+
+        this.setState(batchedSettings);
     }
 
     openSettingsPanel() {
@@ -199,7 +200,7 @@ class Main extends React.Component {
         return (
             <div>
                 <SettingsPanel
-                    applySettings={this.handleApplySettings}
+                    applySettings={s => this.handleApplySettings(s)}
                     closeSelf={this.closeSettingsPanel}
                     settings={this.state}
                 />
