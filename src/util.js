@@ -70,6 +70,27 @@ function formatUTCTime(time) {
     return timeString;
 }
 
+
+function getSettings(state) {
+    if(typeof(Storage) !== "undefined") {
+        let stringSettings, storageSettings;
+
+        stringSettings = localStorage.getItem("settings");
+
+        if(stringSettings !== null) {
+            storageSettings = JSON.parse(stringSettings);
+
+            for(let key in storageSettings) {
+                if(storageSettings.hasOwnProperty(key)) {
+                    state[key] = storageSettings[key];
+                }
+            }
+        }
+    }
+
+    return state;
+}
+
 /*
     Get the full unique link to a tweet
 */
@@ -82,6 +103,7 @@ function getTweetLinkText(screenName, id) {
 export {
     arrayEquals,
     formatUTCTime,
+    getSettings,
     getTweetLinkText,
     getTweetsPromise
 };

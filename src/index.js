@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {arrayEquals, formatUTCTime, getTweetLinkText, getTweetsPromise} from './util.js';
+import {arrayEquals, formatUTCTime, getSettings, getTweetLinkText, getTweetsPromise} from './util.js';
 import './styles/index.css';
 
 /*
@@ -95,6 +95,9 @@ class FeedManager extends React.Component {
     }
 }
 
+/*
+    openSettingsPanel: The handler for the oppen settings button.
+*/
 class TopBar extends React.Component {
     render() {
         return (
@@ -112,24 +115,28 @@ class TopBar extends React.Component {
     }
 }
 
+/*
+    applySettings: Handler for the apply settings button.
+    closeSelf: Handler for this panel to hide on close.
+    settings: The current settings.
+*/
 class SettingsPanel extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = this.props.settings;
+    }
+
     componentDidMount() {
         let tweetCountRange = document.getElementById('tweetCountRange');
-        let tweetCountSpan = document.getElementById('tweetCountSpan');
+        let that = this;
 
-        if(typeof(Storage) !== "undefined") {
-            let temp = localStorage.getItem("tweetCount");
-
-            if(temp) {
-                tweetCountRange.value = temp;
-            }
-        }
-
-        tweetCountSpan.innerHTML = tweetCountRange.value;
+        tweetCountRange.value = this.state.tweetCount;
 
         tweetCountRange.oninput = function() {
-            tweetCountSpan.innerHTML = this.value;
-            Storage && localStorage.setItem("tweetCount", this.value);
+            that.setState({
+                tweetCount: Number(tweetCountRange.value)
+            });
         };
     }
 
@@ -142,10 +149,14 @@ class SettingsPanel extends React.Component {
                 <div className="settingsSection">
                     <span className="settingsTittle">Display</span>
                     <div className="settingsItem">
-                        <span>Display <span id="tweetCountSpan"></span> tweets per column</span>
+                        <span>Display {this.state.tweetCount} tweets per column</span>
                         <input type="range" min="1" max="30"
                             className="slider" id="tweetCountRange" />
                     </div>
+                </div>
+                <div className="settingsSection">
+                    <button onClick={() => this.props.applySettings(this.state)}
+                        className="button applyButton">Apply</button>
                 </div>
             </div>
         );
@@ -156,19 +167,21 @@ class Main extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            tweetCount: 0
-        }
+        // Default values
+        let state = {
+            screenNames: ["appdirect", "laughingsquid", "techcrunch"],
+            tweetCount: 30
+        };
+
+        this.state = getSettings(state);
     }
 
-    componentDidMount() {
+    handleApplySettings(batchedSettings) {
         if(typeof(Storage) !== "undefined") {
-            let tweetCount = localStorage.getItem("tweetCount");
-
-            this.setState({
-                tweetCount: tweetCount ? Number(tweetCount) : 30
-            });
+            var stringSettings = JSON.stringify(batchedSettings);
+            localStorage.setItem("settings", stringSettings);
         }
+        // TODO: actually apply settings live
     }
 
     openSettingsPanel() {
@@ -185,11 +198,15 @@ class Main extends React.Component {
     render() {
         return (
             <div>
-                <SettingsPanel closeSelf={this.closeSettingsPanel} />
+                <SettingsPanel
+                    applySettings={this.handleApplySettings}
+                    closeSelf={this.closeSettingsPanel}
+                    settings={this.state}
+                />
                 <TopBar openSettingsPanel={this.openSettingsPanel} />
                 <div id="mainContent">
                     <FeedManager
-                        screenNames={["appdirect", "laughingsquid", "techcrunch"]}
+                        screenNames={this.state.screenNames}
                         count={this.state.tweetCount}
                     />
                 </div>

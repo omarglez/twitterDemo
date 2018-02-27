@@ -15,6 +15,32 @@ button {
     cursor: pointer;
 }
 
+.button {
+    background-color: #5182ff;
+    color: #FFF;
+    font-size: 1.2em;
+    width: 150px;
+    height: 40px;
+    border-radius: 6px;
+    border: 2px solid #5182ff;
+}
+
+.button:hover {
+    background-color: #111;
+    color: #5182ff;
+}
+
+.button:active {
+    background-color: #5182ff;
+    color: #FFF;
+}
+
+.applyButton {
+    margin-top: 10px;
+    margin-right: 20px;
+    float: right;
+}
+
 #mainContent {
     transition: margin-left 0.5s;
     padding-top: 60px;
@@ -35,6 +61,8 @@ button {
 }
 
 #settingsPanel > .settingsSection {
+    box-sizing: border-box;
+    width: 300px;
     padding-left: 30px;
 }
 
