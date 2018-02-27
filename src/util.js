@@ -1,7 +1,33 @@
+function arrayEquals(a, b) {
+    if(!a || !b){
+        return false;
+    }
+
+    if(a.length !== b.length) {
+        return false;
+    }
+
+    for(let i = 0; i < a.length; i++) {
+        if (a[i] instanceof Array && b[i] instanceof Array) {
+            if(!arrayEquals(a[i], b[i])) {
+                return false;
+            }
+        } else if(a[i] !== b[i]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 /*
     Returns a promise to an array of tweets in json format
 */
 function getTweetsPromise(screenName, count = 30) {
+    if(count === 0) {
+        return Promise.resolve([]);
+    }
+
     let apiStr = 'http://localhost:7890/1.1/statuses/user_timeline.json';
     let promise = fetch(`${apiStr}?count=${count}&screen_name=${screenName}`);
 
@@ -65,6 +91,7 @@ function fixToTop(element) {
 }
 
 export {
+    arrayEquals,
     fixToTop,
     formatUTCTime,
     getTweetLinkText,

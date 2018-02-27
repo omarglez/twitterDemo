@@ -8,6 +8,77 @@ div.center {
     margin: 0 auto;
 }
 
+button {
+    background-color: inherit;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+#mainContent {
+    transition: margin-left 0.5s;
+}
+
+#settingsPanel {
+    height: 100%;
+    width: 0;
+    color: #808080;
+    padding-top: 60px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    background-color: #111;
+    transition: width 0.5s;
+}
+
+#settingsPanel > .settingsSection {
+    padding-left: 30px;
+}
+
+#settingsPanel > .closeButton {
+    color: #808080;
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    font-size: 2em;
+}
+
+#settingsPanel .settingsTittle {
+    font-size: 1.5em;
+}
+
+#settingsPanel .settingsItem {
+    padding-top: 10px;
+    padding-right: 20px;
+}
+
+.slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    margin: 5px 0 0 0;
+    outline: none;
+    background: #404040;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    background: #5182ff;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    background: #5182ff;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
 #topBar {
     background-color: #5182ff;
     height: 60px;
@@ -16,9 +87,8 @@ div.center {
     flex-flow: row nowrap;
 }
 
-#topBar > span {
+#topBar > button {
     padding-left: 20px;
-    cursor: pointer;
 }
 
 #topBar h1 {
@@ -97,6 +167,6 @@ ul.feed {
   width: 100%
 }
 
-.sticky + .feedManager {
+.sticky + div > .feedManager {
     padding-top: 60px;
 }

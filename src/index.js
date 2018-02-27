@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {fixToTop, formatUTCTime, getTweetLinkText, getTweetsPromise} from './util.js';
+import {arrayEquals, fixToTop, formatUTCTime, getTweetLinkText, getTweetsPromise} from './util.js';
 import './styles/index.css';
 
 /*
@@ -50,9 +50,9 @@ class FeedManager extends React.Component {
         };
     }
 
-    componentDidMount() {
-        let tweetPromises = this.props.screenNames.map(name =>
-            getTweetsPromise(name, this.props.count)
+    setTweetContainers(screenNames, count) {
+        let tweetPromises = screenNames.map(name =>
+            getTweetsPromise(name, count)
         );
 
         Promise.all(tweetPromises)
@@ -61,6 +61,25 @@ class FeedManager extends React.Component {
                 tweetContainers: results
             })
         )
+    }
+
+    componentDidMount() {
+        this.setTweetContainers(this.props.screenNames, this.props.count);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if(!arrayEquals(this.props.screenNames, nextProps.screenNames)){
+            this.setTweetContainers(nextProps.screenNames, nextProps.count);
+
+        } else if(this.props.count !== nextProps.count) {
+            if(nextProps.count < this.props.count) {
+                this.setState({
+                    tweetContainers: this.state.tweetContainers.map(a => a.slice(0, nextProps.count))
+                });
+            } else {
+                this.setTweetContainers(nextProps.screenNames, nextProps.count);
+            }
+        }
     }
 
     render() {
@@ -90,7 +109,11 @@ class TopBar extends React.Component {
     render() {
         return (
             <div id="topBar">
-                <span className="topBarElement">&#9776;</span>
+                <button
+                    className="topBarElement"
+                    onClick={this.props.openSettingsPanel}
+                    >&#9776;
+                </button>
                 <div className="center">
                     <h1 className="topBarElement">My Tweet Feed</h1>
                 </div>
@@ -99,15 +122,88 @@ class TopBar extends React.Component {
     }
 }
 
+class SettingsPanel extends React.Component {
+
+    componentDidMount() {
+        let tweetCountRange = document.getElementById('tweetCountRange');
+        let tweetCountSpan = document.getElementById('tweetCountSpan');
+
+        if(typeof(Storage) !== "undefined") {
+            let temp = localStorage.getItem("tweetCount");
+
+            if(temp) {
+                tweetCountRange.value = temp;
+            }
+        }
+        
+        tweetCountSpan.innerHTML = tweetCountRange.value;
+
+        tweetCountRange.oninput = function() {
+            tweetCountSpan.innerHTML = this.value;
+            Storage && localStorage.setItem("tweetCount", this.value);
+        };
+    }
+
+    render() {
+        return (
+            <div id="settingsPanel">
+                <button className="closeButton" onClick={this.props.closeSelf}>
+                    &times;
+                </button>
+                <div className="settingsSection">
+                    <span className="settingsTittle">Display</span>
+                    <div className="settingsItem">
+                        <span>Display <span id="tweetCountSpan"></span> tweets per column</span>
+                        <input type="range" min="1" max="30"
+                            className="slider" id="tweetCountRange" />
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}
+
 class Main extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            tweetCount: 0
+        }
+    }
+
+    componentDidMount() {
+        if(typeof(Storage) !== "undefined") {
+            let tweetCount = localStorage.getItem("tweetCount");
+
+            this.setState({
+                tweetCount: tweetCount ? Number(tweetCount) : 30
+            });
+        }
+    }
+
+    openSettingsPanel() {
+        let offset = "300px";
+        document.getElementById("settingsPanel").style.width = offset;
+        document.getElementById("mainContent").style.marginLeft = offset;
+    }
+
+    closeSettingsPanel() {
+        document.getElementById("settingsPanel").style.width = "0";
+        document.getElementById("mainContent").style.marginLeft = "0";
+    }
+
     render() {
         return (
             <div>
-                <TopBar />
-                <FeedManager
-                    screenNames={["appdirect", "laughingsquid", "techcrunch"]}
-                    count={30}
-                />
+                <SettingsPanel closeSelf={this.closeSettingsPanel} />
+                <TopBar openSettingsPanel={this.openSettingsPanel} />
+                <div id="mainContent">
+                    <FeedManager
+                        screenNames={["appdirect", "laughingsquid", "techcrunch"]}
+                        count={this.state.tweetCount}
+                    />
+                </div>
             </div>
         );
     }
