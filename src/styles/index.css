@@ -17,6 +17,7 @@ button {
 
 #mainContent {
     transition: margin-left 0.5s;
+    padding-top: 60px;
 }
 
 #settingsPanel {
@@ -80,6 +81,9 @@ button {
 }
 
 #topBar {
+    position: fixed;
+    top: 0;
+    width: 100%;
     background-color: #5182ff;
     height: 60px;
     display: flex;
@@ -159,14 +163,4 @@ ul.feed {
 
 .muted {
     color: #808080;
-}
-
-.sticky {
-  position: fixed;
-  top: 0;
-  width: 100%
-}
-
-.sticky + div > .feedManager {
-    padding-top: 60px;
 }

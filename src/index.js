@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {arrayEquals, fixToTop, formatUTCTime, getTweetLinkText, getTweetsPromise} from './util.js';
+import {arrayEquals, formatUTCTime, getTweetLinkText, getTweetsPromise} from './util.js';
 import './styles/index.css';
 
 /*
@@ -96,16 +96,6 @@ class FeedManager extends React.Component {
 }
 
 class TopBar extends React.Component {
-    componentDidMount() {
-        window.onscroll = function() {
-            fixToTop(document.getElementById('topBar'));
-        };
-    }
-
-    componentWillUnmount() {
-        window.onscroll = function() {};
-    }
-
     render() {
         return (
             <div id="topBar">
@@ -123,7 +113,6 @@ class TopBar extends React.Component {
 }
 
 class SettingsPanel extends React.Component {
-
     componentDidMount() {
         let tweetCountRange = document.getElementById('tweetCountRange');
         let tweetCountSpan = document.getElementById('tweetCountSpan');
@@ -135,7 +124,7 @@ class SettingsPanel extends React.Component {
                 tweetCountRange.value = temp;
             }
         }
-        
+
         tweetCountSpan.innerHTML = tweetCountRange.value;
 
         tweetCountRange.oninput = function() {
