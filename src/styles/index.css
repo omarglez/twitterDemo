@@ -97,7 +97,7 @@ button {
     visibility: hidden;
     color: #cc0;
     position: absolute;
-    right: 26px;
+    right: 31px;
     padding-top: 4px;
 }
 
@@ -183,27 +183,37 @@ ul.feed {
     border-top: 2px solid #e6e6e6;
     cursor: pointer;
     box-sizing: border-box;
-    height: 105px;
+    height: 130px;
+    display: flex;
+    flex-flow: row nowrap;
 }
 
 .tweet:hover {
     background-color: #f2f2f2;
 }
 
-.tweet > span {
+.tweet > img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    margin-right: 10px;
+    flex: 0 0 auto;
+}
+
+.tweet span {
     margin-right: 5px;
 }
 
-.tweet > .name {
+.tweet .name {
     font-weight: bold;
 }
 
-.tweet > .time:before {
+.tweet .time:before {
     content: "\00b7";
     margin-right: 5px;
 }
 
-.tweet > p {
+.tweet p {
     margin: 5px 0 0 0;
 }
 

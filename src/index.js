@@ -19,12 +19,15 @@ function TweetDisplay(props) {
             onClick={() => window.open(
                 getTweetLinkText(props.tweet.user.screen_name, props.tweet.id_str),
                 '_blank')}>
-            <span className="name">{props.tweet.user.name}</span>
-            <span className="muted">{`@${props.tweet.user.screen_name}`}</span>
-            <span className="muted time">
-                {formatUTCTime(props.tweet.created_at)}
-            </span>
-            <p>{props.tweet.text}</p>
+            <img src={props.tweet.user.profile_image_url} />
+            <div>
+                <span className="name">{props.tweet.user.name}</span>
+                <span className="muted">{`@${props.tweet.user.screen_name}`}</span>
+                <span className="muted time">
+                    {formatUTCTime(props.tweet.created_at)}
+                </span>
+                <p>{props.tweet.text}</p>
+            </div>
         </li>
     );
 }
