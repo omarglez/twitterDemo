@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {arrayEquals, formatUTCTime, getSettings, getTweetLinkText, getTweetsPromise} from './util.js';
+import {arrayEquals, formatUTCTime, getSettings, getTweetLinkText, getTweetsPromise, getUsersPromise, setSettings} from './util.js';
 import './styles/index.css';
 
 /*
@@ -55,12 +55,11 @@ class FeedManager extends React.Component {
             getTweetsPromise(name, count)
         );
 
-        Promise.all(tweetPromises)
-        .then(results =>
+        Promise.all(tweetPromises).then(results =>
             this.setState({
                 tweetContainers: results
             })
-        )
+        );
     }
 
     componentDidMount() {
@@ -128,8 +127,10 @@ class SettingsPanel extends React.Component {
     }
 
     componentDidMount() {
-        let tweetCountRange = document.getElementById('tweetCountRange');
         let that = this;
+
+        // Initialize tweetCount slider
+        let tweetCountRange = document.getElementById('tweetCountRange');
 
         tweetCountRange.value = this.state.tweetCount;
 
@@ -138,9 +139,63 @@ class SettingsPanel extends React.Component {
                 tweetCount: Number(tweetCountRange.value)
             });
         };
+
+        // Initialize screenName inputs
+        let screenNameInputs = document.getElementsByClassName("screenNameInput");
+
+        this.state.screenNames.forEach((name, i) => {
+            screenNameInputs[i].value = name;
+        });
+
+        for(let i = 0; i < screenNameInputs.length; i++) {
+            screenNameInputs[i].oninput = function() {
+                let value = screenNameInputs[i].value;
+                let alphanumeric = RegExp("^[A-Za-z0-9_]*$");
+                let warning = document.getElementById("screenNameInputWarning" + i);
+
+                if(alphanumeric.test(value)) {
+                    if(warning) {
+                        warning.style.visibility = "hidden";
+                    }
+
+                    let screenNamesCopy = that.state.screenNames.slice();
+                    screenNamesCopy[i] = value;
+
+                    that.setState({
+                        screenNames: screenNamesCopy
+                    });
+                } else {
+                    if(warning) {
+                        warning.style.visibility = "visible";
+                    }
+                }
+            };
+        }
+    }
+
+    areSettingsValid() {
+        let warnings = document.getElementsByClassName("textInputWarning");
+
+        for(let i = 0; i < warnings.length; i++) {
+            if(warnings[i].style.visibility === "visible") {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     render() {
+        let that = this;
+        let applyFunction = function() {
+            if(that.areSettingsValid()) {
+                that.props.applySettings(that.state);
+            } else {
+                // TODO: alert user settings are not valid
+                console.log("Cannot apply invalid settings");
+            }
+        };
+
         return (
             <div id="settingsPanel">
                 <button className="closeButton" onClick={this.props.closeSelf}>
@@ -149,13 +204,22 @@ class SettingsPanel extends React.Component {
                 <div className="settingsSection">
                     <span className="settingsTittle">Display</span>
                     <div className="settingsItem">
+                        <span>Show tweets from these users</span>
+                        <input type="text" className="screenNameInput" maxLength="15"></input>
+                        <span className="textInputWarning" id="screenNameInputWarning0">&#9888;</span>
+                        <input type="text" className="screenNameInput" maxLength="15"></input>
+                        <span className="textInputWarning" id="screenNameInputWarning1">&#9888;</span>
+                        <input type="text" className="screenNameInput" maxLength="15"></input>
+                        <span className="textInputWarning" id="screenNameInputWarning2">&#9888;</span>
+                    </div>
+                    <div className="settingsItem">
                         <span>Display {this.state.tweetCount} tweets per column</span>
                         <input type="range" min="1" max="30"
                             className="slider" id="tweetCountRange" />
                     </div>
                 </div>
                 <div className="settingsSection">
-                    <button onClick={() => this.props.applySettings(this.state)}
+                    <button onClick={applyFunction}
                         className="button applyButton">Apply</button>
                 </div>
             </div>
@@ -169,6 +233,7 @@ class Main extends React.Component {
 
         // Default values
         let state = {
+//            validScreenNames: [true, true, true],
             screenNames: ["appdirect", "laughingsquid", "techcrunch"],
             tweetCount: 30
         };
@@ -177,12 +242,35 @@ class Main extends React.Component {
     }
 
     handleApplySettings(batchedSettings) {
-        if(typeof(Storage) !== "undefined") {
-            var stringSettings = JSON.stringify(batchedSettings);
-            localStorage.setItem("settings", stringSettings);
-        }
+        let sNames = batchedSettings.screenNames;
 
-        this.setState(batchedSettings);
+        if(!arrayEquals(this.state.screenNames, sNames)) {
+            this.getValidScreenNames(sNames).then(validScreenNames => {
+                let valid = validScreenNames.length === sNames.length;
+
+                if(valid) {
+                    setSettings(batchedSettings);
+                    this.setState(batchedSettings);
+                } else {
+                    // TODO: alert user screen names were not found
+                }
+            });
+        } else {
+            setSettings(batchedSettings);
+            this.setState(batchedSettings);
+        }
+    }
+
+    getValidScreenNames(namesToValidate) {
+        return getUsersPromise(namesToValidate).then(results => {
+            let validScreenNames = [];
+
+            if(!results.errors) {
+                validScreenNames = results.map(user => user.screen_name);
+            }
+
+            return validScreenNames;
+        });
     }
 
     openSettingsPanel() {

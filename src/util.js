@@ -34,6 +34,16 @@ function getTweetsPromise(screenName, count = 30) {
     return promise.then(data => data.json());
 }
 
+function getUsersPromise(screenNames) {
+    if(screenNames.length === 0) {
+        return Promise.resolve([]);
+    }
+    let apiStr = 'http://localhost:7890/1.1/users/lookup.json';
+    let promise = fetch(`${apiStr}?screen_name=${screenNames.join(",")}`);
+
+    return promise.then(data => data.json());
+}
+
 /*
     Takes a UTC time string and returns a prettyfied time format:
     Less than an hour ago: XXm
@@ -91,6 +101,13 @@ function getSettings(state) {
     return state;
 }
 
+function setSettings(batchedSettings) {
+    if(typeof(Storage) !== "undefined") {
+        let stringSettings = JSON.stringify(batchedSettings);
+        localStorage.setItem("settings", stringSettings);
+    }
+}
+
 /*
     Get the full unique link to a tweet
 */
@@ -105,5 +122,7 @@ export {
     formatUTCTime,
     getSettings,
     getTweetLinkText,
-    getTweetsPromise
+    getTweetsPromise,
+    getUsersPromise,
+    setSettings
 };
