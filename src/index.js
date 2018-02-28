@@ -1,7 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {arrayEquals, formatUTCTime, getSettings, getTweetLinkText, getTweetsPromise, getUsersPromise, setSettings} from './util.js';
+import { ToastContainer, toast, style } from 'react-toastify';
+import { arrayEquals, formatUTCTime, getSettings, getTweetLinkText, getTweetsPromise, getUsersPromise, setSettings } from './util.js';
 import './styles/index.css';
+
+
+style({
+    colorWarning: "#111",
+});
 
 /*
     tweet: The tweet object as specified in the tweet api:
@@ -175,14 +181,17 @@ class SettingsPanel extends React.Component {
 
     areSettingsValid() {
         let warnings = document.getElementsByClassName("textInputWarning");
+        let inputs = document.getElementsByClassName("screenNameInput");
+        let result = true;
 
         for(let i = 0; i < warnings.length; i++) {
             if(warnings[i].style.visibility === "visible") {
-                return false;
+                toast.warn(`The following screen name is invalid: ${inputs[i].value}`);
+                result = false;
             }
         }
 
-        return true;
+        return result;
     }
 
     render() {
@@ -190,9 +199,6 @@ class SettingsPanel extends React.Component {
         let applyFunction = function() {
             if(that.areSettingsValid()) {
                 that.props.applySettings(that.state);
-            } else {
-                // TODO: alert user settings are not valid
-                console.log("Cannot apply invalid settings");
             }
         };
 
@@ -202,7 +208,7 @@ class SettingsPanel extends React.Component {
                     &times;
                 </button>
                 <div className="settingsSection">
-                    <span className="settingsTittle">Display</span>
+                    <span className="settingsTittle">Settings</span>
                     <div className="settingsItem">
                         <span>Show tweets from these users</span>
                         <input type="text" className="screenNameInput" maxLength="15"></input>
@@ -233,7 +239,6 @@ class Main extends React.Component {
 
         // Default values
         let state = {
-//            validScreenNames: [true, true, true],
             screenNames: ["appdirect", "laughingsquid", "techcrunch"],
             tweetCount: 30
         };
@@ -242,7 +247,7 @@ class Main extends React.Component {
     }
 
     handleApplySettings(batchedSettings) {
-        let sNames = batchedSettings.screenNames;
+        let sNames = batchedSettings.screenNames.slice();
 
         if(!arrayEquals(this.state.screenNames, sNames)) {
             this.getValidScreenNames(sNames).then(validScreenNames => {
@@ -252,7 +257,20 @@ class Main extends React.Component {
                     setSettings(batchedSettings);
                     this.setState(batchedSettings);
                 } else {
-                    // TODO: alert user screen names were not found
+                    sNames = sNames.map(sN => sN.toLowerCase());
+
+                    validScreenNames.forEach(sN => {
+                        // remove the valid names
+                        let index = sNames.indexOf(sN.toLowerCase());
+                        if(index > -1) {
+                            sNames.splice(index, 1);
+                        }
+                    });
+
+                    // all remaining names were not found
+                    sNames.forEach(sN => {
+                        toast.warn(`Username ${sN} could not be found. Make sure it is not misspelled.`);
+                    });
                 }
             });
         } else {
@@ -287,6 +305,7 @@ class Main extends React.Component {
     render() {
         return (
             <div>
+                <ToastContainer autoClose={10000} className="toast"/>
                 <SettingsPanel
                     applySettings={s => this.handleApplySettings(s)}
                     closeSelf={this.closeSettingsPanel}

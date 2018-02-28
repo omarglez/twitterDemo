@@ -36,8 +36,7 @@ button {
 }
 
 .applyButton {
-    margin-top: 10px;
-    margin-right: 20px;
+    margin-top: 20px;
     float: right;
 }
 
@@ -63,7 +62,8 @@ button {
 #settingsPanel > .settingsSection {
     box-sizing: border-box;
     width: 300px;
-    padding-left: 30px;
+    padding-left: 25px;
+    padding-right: 25px;
 }
 
 #settingsPanel > .closeButton {
@@ -80,7 +80,6 @@ button {
 
 #settingsPanel .settingsItem {
     padding-top: 15px;
-    padding-right: 20px;
 }
 
 #settingsPanel .screenNameInput {
@@ -206,6 +205,10 @@ ul.feed {
 
 .tweet > p {
     margin: 5px 0 0 0;
+}
+
+.toast {
+    color: #808080;
 }
 
 .muted {
