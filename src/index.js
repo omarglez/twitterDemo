@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { ToastContainer, toast, style } from 'react-toastify';
 import { arrayEquals, formatUTCTime, getSettings, getTweetLinkText, getTweetsPromise, getUsersPromise, setSettings } from './util.js';
-import './styles/index.css';
+ import './styles/index.css';
 
 
 style({
@@ -105,6 +105,7 @@ class FeedManager extends React.Component {
 
 /*
     openSettingsPanel: The handler for the oppen settings button.
+    title: the title of the page
 */
 class TopBar extends React.Component {
     render() {
@@ -116,7 +117,7 @@ class TopBar extends React.Component {
                     >&#9776;
                 </button>
                 <div className="center">
-                    <h1 className="topBarElement">My Tweet Feed</h1>
+                    <h1 className="topBarElement">{this.props.title}</h1>
                 </div>
             </div>
         );
@@ -213,7 +214,7 @@ class SettingsPanel extends React.Component {
                 <div className="settingsSection">
                     <span className="settingsTittle">Settings</span>
                     <div className="settingsItem">
-                        <span>Show tweets from these users</span>
+                        <p>Show tweets from these users</p>
                         <input type="text" className="screenNameInput" maxLength="15"></input>
                         <span className="textInputWarning" id="screenNameInputWarning0">&#9888;</span>
                         <input type="text" className="screenNameInput" maxLength="15"></input>
@@ -222,9 +223,16 @@ class SettingsPanel extends React.Component {
                         <span className="textInputWarning" id="screenNameInputWarning2">&#9888;</span>
                     </div>
                     <div className="settingsItem">
-                        <span>Display {this.state.tweetCount} tweets per column</span>
+                        <p>Display {this.state.tweetCount} tweets per column</p>
                         <input type="range" min="1" max="30"
                             className="slider" id="tweetCountRange" />
+                    </div>
+                    <div className="settingsItem">
+                        <p>Choose a theme</p>
+                        <button className="settingsButton"
+                            onClick={() => applyTheme(defaultTheme)}>Default</button>
+                        <button className="settingsButton"
+                            onClick={() => applyTheme(otherTheme)}>Green</button>
                     </div>
                 </div>
                 <div className="settingsSection">
@@ -314,7 +322,10 @@ class Main extends React.Component {
                     closeSelf={this.closeSettingsPanel}
                     settings={this.state}
                 />
-                <TopBar openSettingsPanel={this.openSettingsPanel} />
+                <TopBar
+                    openSettingsPanel={this.openSettingsPanel}
+                    title="My Tweet Feed"
+                />
                 <div id="mainContent">
                     <FeedManager
                         screenNames={this.state.screenNames}
@@ -324,6 +335,55 @@ class Main extends React.Component {
             </div>
         );
     }
+}
+
+const themeProperties = [
+    "--main-color",
+    "--main-text-color",
+    "--secondary-color",
+    "--secondary-text-color",
+    "--secondary-subcolor",
+    "--secondary-text-subcolor",
+    "--background-color",
+    "--background-highlight-color",
+    "--background-contrast-color",
+    "--warning-color"
+];
+
+const defaultTheme = [
+    "#5182ff",
+    "#ffffff",
+    "#111111",
+    "#808080",
+    "#404040",
+    "#cccccc",
+    "#e6e6e6",
+    "#f2f2f2",
+    "#ffffff",
+    "#cccc00"
+];
+
+const otherTheme = [
+    "#009900",
+    "#ffffff",
+    "#002400",
+    "#00ff00",
+    "#008000",
+    "#99ff99",
+    "#ccffcc",
+    "#e5ffe5",
+    "#ffffff",
+    "#cccc00"
+];
+
+function applyTheme(themeValues) {
+    if(themeValues.length !== themeProperties.length) {
+        return;
+    }
+
+    themeProperties.forEach((prop, i) => {
+        document.documentElement.style.setProperty(prop, themeValues[i]);
+    });
 }
 
 
