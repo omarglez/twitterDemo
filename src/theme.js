@@ -30,6 +30,19 @@ const defaultTheme = [
     "#cccc00"
 ];
 
+const gotham = [
+    "#5983a6",
+    "#dee6ed",
+    "#0d1a26",
+    "#4080bf",
+    "#21415f",
+    "#b4cde4",
+    "#dbe5f0",
+    "#edf2f7",
+    "#f5faff",
+    "#cccc00"
+];
+
 const aqua = [
     "#008080",
     "#FFEFD5",
@@ -43,8 +56,8 @@ const aqua = [
     "#cccc00"
 ];
 
-const themes = [defaultTheme, aqua];
-const themeNames = ["default", "aqua"];
+const themes = [defaultTheme, gotham, aqua];
+const themeNames = ["default", "gotham", "aqua"];
 
 function applyTheme(themeName) {
     let index = themeNames.indexOf(themeName);

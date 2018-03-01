@@ -12,7 +12,7 @@ import './styles/index.css';
 */
 function TweetDisplay(props) {
     return (
-        <li className="tweet"
+        <li className="tweet flexrow"
             onClick={() => window.open(
                 getTweetLinkText(props.tweet.user.screen_name, props.tweet.id_str),
                 '_blank')}>
@@ -107,7 +107,7 @@ class FeedManager extends React.Component {
 class TopBar extends React.Component {
     render() {
         return (
-            <div id="topBar">
+            <div id="topBar" className="flexrow">
                 <button
                     className="topBarElement"
                     onClick={this.props.openSettingsPanel}
@@ -234,10 +234,14 @@ class SettingsPanel extends React.Component {
                     </div>
                     <div className="settingsItem">
                         <p>Choose a theme</p>
-                        <button className="settingsButton"
-                            onClick={() => changeTheme("default")}>Default</button>
-                        <button className="settingsButton"
-                            onClick={() => changeTheme("aqua")}>Aqua</button>
+                        <div className="flexrow">
+                            <button className="settingsButton"
+                                onClick={() => changeTheme("default")}>Default</button>
+                            <button className="settingsButton"
+                                onClick={() => changeTheme("gotham")}>Gotham</button>
+                            <button className="settingsButton"
+                                onClick={() => changeTheme("aqua")}>Aqua</button>
+                        </div>
                     </div>
                 </div>
                 <div className="settingsSection">

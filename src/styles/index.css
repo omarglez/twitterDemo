@@ -76,6 +76,11 @@ button {
     background-color: var(--secondary-color);
 }
 
+.flexrow {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
 #mainContent {
     transition: margin-left 0.5s;
     padding-top: 60px;
@@ -172,9 +177,7 @@ button {
     width: 100%;
     background-color: var(--main-color);
     height: 60px;
-    display: flex;
     align-items: center;
-    flex-flow: row nowrap;
 }
 
 #topBar > button {
@@ -224,8 +227,6 @@ ul.feed {
     cursor: pointer;
     box-sizing: border-box;
     height: 130px;
-    display: flex;
-    flex-flow: row nowrap;
 }
 
 .tweet:hover {
