@@ -203,6 +203,14 @@ class SettingsPanel extends React.Component {
             }
         };
 
+        let changeTheme = function(themeName) {
+            applyTheme(themeName);
+
+            that.setState({
+                theme: themeName
+            });
+        };
+
         return (
             <div id="settingsPanel">
                 <button className="closeButton" onClick={this.props.closeSelf}>
@@ -227,9 +235,9 @@ class SettingsPanel extends React.Component {
                     <div className="settingsItem">
                         <p>Choose a theme</p>
                         <button className="settingsButton"
-                            onClick={() => applyTheme("default")}>Default</button>
+                            onClick={() => changeTheme("default")}>Default</button>
                         <button className="settingsButton"
-                            onClick={() => applyTheme("green")}>Green</button>
+                            onClick={() => changeTheme("aqua")}>Aqua</button>
                     </div>
                 </div>
                 <div className="settingsSection">
@@ -248,22 +256,30 @@ class Main extends React.Component {
         // Default values
         let state = {
             screenNames: ["appdirect", "laughingsquid", "techcrunch"],
+            theme: "default",
             tweetCount: 30
         };
 
         this.state = getSettings(state);
+        applyTheme(this.state.theme);
     }
 
     handleApplySettings(batchedSettings) {
         let sNames = batchedSettings.screenNames.slice();
+        let that = this;
+
+        let saveSettings = function() {
+            setSettings(batchedSettings);
+            that.setState(batchedSettings);
+            toast.warn("Settings have been applied and saved successfully!");
+        };
 
         if(!arrayEquals(this.state.screenNames, sNames)) {
             this.getValidScreenNames(sNames).then(validScreenNames => {
                 let valid = validScreenNames.length === sNames.length;
 
                 if(valid) {
-                    setSettings(batchedSettings);
-                    this.setState(batchedSettings);
+                    saveSettings();
                 } else {
                     sNames = sNames.map(sN => sN.toLowerCase());
 
@@ -282,8 +298,7 @@ class Main extends React.Component {
                 }
             });
         } else {
-            setSettings(batchedSettings);
-            this.setState(batchedSettings);
+            saveSettings();
         }
     }
 
