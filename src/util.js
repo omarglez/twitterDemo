@@ -1,3 +1,7 @@
+/*
+    Recursive equality checker for arrays.
+    Not for use with arrays of objects.
+*/
 function arrayEquals(a, b) {
     if(!a || !b){
         return false;
@@ -34,6 +38,10 @@ function getTweetsPromise(screenName, count = 30) {
     return promise.then(data => data.json());
 }
 
+/*
+    Returns a promise to an array of users in json format.
+    If arrays length is smaller, some users were not found.
+*/
 function getUsersPromise(screenNames) {
     if(screenNames.length === 0) {
         return Promise.resolve([]);
@@ -80,7 +88,9 @@ function formatUTCTime(time) {
     return timeString;
 }
 
-
+/*
+    Loads the settings object from local storage.
+*/
 function getSettings(state) {
     if(typeof(Storage) !== "undefined") {
         let stringSettings, storageSettings;
@@ -101,6 +111,9 @@ function getSettings(state) {
     return state;
 }
 
+/*
+    Stores the settings object in local storage.
+*/
 function setSettings(batchedSettings) {
     if(typeof(Storage) !== "undefined") {
         let stringSettings = JSON.stringify(batchedSettings);
@@ -117,7 +130,7 @@ function getTweetLinkText(screenName, id) {
     return `${baseURL}${screenName}/status/${id}`;
 }
 
-export {
+export default {
     arrayEquals,
     formatUTCTime,
     getSettings,

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ToastContainer, toast } from 'react-toastify';
-import { arrayEquals, formatUTCTime, getSettings, getTweetLinkText, getTweetsPromise, getUsersPromise, setSettings } from './util.js';
+import Util from './util.js';
 import { applyTheme } from './theme.js';
 import './styles/index.css';
 
@@ -14,14 +14,14 @@ function TweetDisplay(props) {
     return (
         <li className="tweet flexrow"
             onClick={() => window.open(
-                getTweetLinkText(props.tweet.user.screen_name, props.tweet.id_str),
+                Util.getTweetLinkText(props.tweet.user.screen_name, props.tweet.id_str),
                 '_blank')}>
             <img src={props.tweet.user.profile_image_url} />
             <div>
                 <span className="name">{props.tweet.user.name}</span>
                 <span className="muted">{`@${props.tweet.user.screen_name}`}</span>
                 <span className="muted time">
-                    {formatUTCTime(props.tweet.created_at)}
+                    {Util.formatUTCTime(props.tweet.created_at)}
                 </span>
                 <p>{props.tweet.text}</p>
             </div>
@@ -58,7 +58,7 @@ class FeedManager extends React.Component {
 
     setTweetContainers(screenNames, count) {
         let tweetPromises = screenNames.map(name =>
-            getTweetsPromise(name, count)
+            Util.getTweetsPromise(name, count)
         );
 
         Promise.all(tweetPromises).then(results =>
@@ -73,7 +73,7 @@ class FeedManager extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(!arrayEquals(this.props.screenNames, nextProps.screenNames)){
+        if(!Util.arrayEquals(this.props.screenNames, nextProps.screenNames)){
             this.setTweetContainers(nextProps.screenNames, nextProps.count);
 
         } else if(this.props.count !== nextProps.count) {
@@ -125,6 +125,7 @@ class TopBar extends React.Component {
     applySettings: Handler for the apply settings button.
     closeSelf: Handler for this panel to hide on close.
     settings: The current settings.
+    TODO: break down into smaller components.
 */
 class SettingsPanel extends React.Component {
     constructor(props) {
@@ -264,7 +265,7 @@ class Main extends React.Component {
             tweetCount: 30
         };
 
-        this.state = getSettings(state);
+        this.state = Util.getSettings(state);
         applyTheme(this.state.theme);
     }
 
@@ -273,12 +274,12 @@ class Main extends React.Component {
         let that = this;
 
         let saveSettings = function() {
-            setSettings(batchedSettings);
+            Util.setSettings(batchedSettings);
             that.setState(batchedSettings);
             toast.warn("Settings have been applied and saved successfully!");
         };
 
-        if(!arrayEquals(this.state.screenNames, sNames)) {
+        if(!Util.arrayEquals(this.state.screenNames, sNames)) {
             this.getValidScreenNames(sNames).then(validScreenNames => {
                 let valid = validScreenNames.length === sNames.length;
 
@@ -307,7 +308,7 @@ class Main extends React.Component {
     }
 
     getValidScreenNames(namesToValidate) {
-        return getUsersPromise(namesToValidate).then(results => {
+        return Util.getUsersPromise(namesToValidate).then(results => {
             let validScreenNames = [];
 
             if(!results.errors) {

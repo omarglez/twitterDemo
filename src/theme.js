@@ -1,9 +1,5 @@
 import { style } from 'react-toastify';
 
-style({
-    colorWarning: "#111111",
-});
-
 const themeProperties = [
     "--main-color",
     "--main-text-color",
@@ -43,6 +39,7 @@ const gotham = [
     "#cccc00"
 ];
 
+// TODO: Make theme less ugly.
 const aqua = [
     "#008080",
     "#FFEFD5",
