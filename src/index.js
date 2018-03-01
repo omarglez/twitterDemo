@@ -1,13 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ToastContainer, toast, style } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import { arrayEquals, formatUTCTime, getSettings, getTweetLinkText, getTweetsPromise, getUsersPromise, setSettings } from './util.js';
- import './styles/index.css';
+import { applyTheme } from './theme.js';
+import './styles/index.css';
 
-
-style({
-    colorWarning: "#111",
-});
 
 /*
     tweet: The tweet object as specified in the tweet api:
@@ -230,9 +227,9 @@ class SettingsPanel extends React.Component {
                     <div className="settingsItem">
                         <p>Choose a theme</p>
                         <button className="settingsButton"
-                            onClick={() => applyTheme(defaultTheme)}>Default</button>
+                            onClick={() => applyTheme("default")}>Default</button>
                         <button className="settingsButton"
-                            onClick={() => applyTheme(otherTheme)}>Green</button>
+                            onClick={() => applyTheme("green")}>Green</button>
                     </div>
                 </div>
                 <div className="settingsSection">
@@ -336,56 +333,6 @@ class Main extends React.Component {
         );
     }
 }
-
-const themeProperties = [
-    "--main-color",
-    "--main-text-color",
-    "--secondary-color",
-    "--secondary-text-color",
-    "--secondary-subcolor",
-    "--secondary-text-subcolor",
-    "--background-color",
-    "--background-highlight-color",
-    "--background-contrast-color",
-    "--warning-color"
-];
-
-const defaultTheme = [
-    "#5182ff",
-    "#ffffff",
-    "#111111",
-    "#808080",
-    "#404040",
-    "#cccccc",
-    "#e6e6e6",
-    "#f2f2f2",
-    "#ffffff",
-    "#cccc00"
-];
-
-const otherTheme = [
-    "#009900",
-    "#ffffff",
-    "#002400",
-    "#00ff00",
-    "#008000",
-    "#99ff99",
-    "#ccffcc",
-    "#e5ffe5",
-    "#ffffff",
-    "#cccc00"
-];
-
-function applyTheme(themeValues) {
-    if(themeValues.length !== themeProperties.length) {
-        return;
-    }
-
-    themeProperties.forEach((prop, i) => {
-        document.documentElement.style.setProperty(prop, themeValues[i]);
-    });
-}
-
 
 ReactDOM.render(
     <Main />,
